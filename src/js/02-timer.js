@@ -1,5 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const ref = {
   inputEl: document.querySelector('#datetime-picker'),
@@ -10,32 +11,31 @@ const ref = {
   secondsEl: document.querySelector('[data-seconds]'),
 };
 
-const options = {
+const fp = flatpickr('#datetime-picker', {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
     if (+selectedDates[0] < Date.now()) {
-      window.alert('Please choose a date in the future');
-      defaultStartBtnState();
+      Notify.failure('Please choose a date in the future');
+      initDefaultStartBtnState();
       return;
     } else {
       ref.startBtnEl.disabled = false;
     }
   },
-};
+});
 
-const fp = flatpickr('#datetime-picker', options);
 let intervalId = null;
 
 ref.startBtnEl.addEventListener('click', onStartBtnClick);
 
-defaultStartBtnState();
+initDefaultStartBtnState();
 
 // -----------FUNCTIONS-------------
 
-function defaultStartBtnState() {
+function initDefaultStartBtnState() {
   ref.startBtnEl.disabled = true;
 }
 
@@ -47,16 +47,15 @@ function onStartBtnClick() {
       clearInterval(intervalId);
       ref.inputEl.disabled = false;
       return;
-    } else {
-      const { days, hours, minutes, seconds } = convertMs(targetDate - Date.now());
-      ref.daysEl.innerHTML = addLeadingZero(days);
-      ref.hoursEl.innerHTML = addLeadingZero(hours);
-      ref.minutesEl.innerHTML = addLeadingZero(minutes);
-      ref.secondsEl.innerHTML = addLeadingZero(seconds);
     }
+    const { days, hours, minutes, seconds } = convertMs(targetDate - Date.now());
+    ref.daysEl.innerHTML = addLeadingZero(days);
+    ref.hoursEl.innerHTML = addLeadingZero(hours);
+    ref.minutesEl.innerHTML = addLeadingZero(minutes);
+    ref.secondsEl.innerHTML = addLeadingZero(seconds);
   }, 1000);
   ref.inputEl.disabled = true;
-  defaultStartBtnState();
+  initDefaultStartBtnState();
 }
 
 function convertMs(ms) {

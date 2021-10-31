@@ -17,6 +17,15 @@ img {
   max-width: 100%;
 }
 
+button {
+  cursor: pointer;
+}
+
+.flatpickr-input,
+button[data-start] {
+  font-size: 1rem;
+}
+
 .timer {
   display: flex;
   align-content: center;
