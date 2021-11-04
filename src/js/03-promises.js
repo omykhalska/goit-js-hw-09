@@ -13,7 +13,9 @@ function onBtnClick(e) {
   e.preventDefault();
 
   const { delayField, stepField, amountField } = refs;
-  if (!isFormFulfilled(delayField, stepField, amountField)) {
+
+  if (!delayField.value || !stepField.value || !amountField.value) {
+    Notify.failure(`Error: all fields must be filled in !`);
     return;
   }
 
@@ -46,12 +48,4 @@ function createPromise(position, delay) {
       }
     }, delay);
   });
-}
-
-function isFormFulfilled(input1, input2, input3) {
-  if (!input1.value || !input2.value || !input3.value) {
-    Notify.failure(`Error: all fields must be filled in !`);
-    return false;
-  }
-  return true;
 }
